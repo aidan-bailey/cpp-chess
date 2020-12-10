@@ -3,58 +3,43 @@ enum ChessColour {
     BLACK
     WHITE
 }
-enum ChessPieceType {
+enum SquareType {
     K
     Q
     B
     K
     P
+    X
 }
-class Piece {
-    +ChessPieceType Type
-    +ChessColour Colour
-    +int Value
-    +int Id
-}
-Piece --> ChessPieceType : uses
-Piece --> ChessColour : uses
 class Square {
-    -Piece* piece
-    +bool IsOccupied( void )
-    +Piece* GetPiece( void )
-    +bool RemovePiece( void )
-    +bool AddPiece( Piece& )
+    +SquareType Type
+    +ChessColour Colour
 }
-Square --> Piece : points to
+Square --> SquareType : uses
+Square --> ChessColour : uses
 class Board {
-    -vector<Piece> white_pieces
-    -vector<Piece> black_pieces
     -Square[8][8] squares
-    +vector<Move> GetMoves( ChessColour )
-    +bool PerformMove( Move )
+    -bool isLegalMove( Move )
     +Board( void )
+    +bool PerformMove( Move )
+    +vector<Move> GetMoves( ChessColour )
 }
 class Move {
-    Square& from
-    Square& to
+    +pair<char,int> from
+    +pair<char,int> to
 }
-Move --> Square : contains
 Board --> Move : uses
 Board --> Square : contains
-Board --> Piece : stores
 Board --> ChessColour : uses
 class GameState {
     -Board board
     -ChessColour turn_colour
     -vector<Move> move_list
-    -String json_state
-    -int score
+    +GameState( void )
     +void Play( Move )
     +void PrintBoard( void )
-    +int GetScore( void )
     +ChessColour GetColour( void )
-    +vector<Move> GetMoves( void )
-    +GameState( void )
+    +vector<Move> GetMoveList ( void )
 }
 GameState --> Board : uses
 GameState --> ChessColour : uses

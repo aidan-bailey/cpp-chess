@@ -9,10 +9,7 @@ namespace models {
 struct Piece {
   enums::ChessPieceType Type;
   enums::ChessColour Colour;
-  int Value;
-  int Id;
-  Piece(enums::ChessPieceType type, enums::ChessColour colour, int value,
-        int id);
+  Piece(enums::ChessPieceType type, enums::ChessColour colour);
 };
 
 } // namespace models
