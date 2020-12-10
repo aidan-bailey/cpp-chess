@@ -3,7 +3,7 @@
 
 namespace enums {
 
-enum ChessColour { B, W };
+enum ChessColour { BLACK, WHITE };
 
 }
 
