@@ -4,11 +4,11 @@ enum ChessColour {
     WHITE
 }
 enum ChessPieceType {
-    KING
-    QUEEN
-    BISHOP
-    KNIGHT
-    PAWN
+    K
+    Q
+    B
+    K
+    P
 }
 class Piece {
     +ChessPieceType Type
@@ -18,12 +18,45 @@ class Piece {
 }
 Piece --> ChessPieceType : uses
 Piece --> ChessColour : uses
-class Board {
-    -2dMatrix<int> state
-    -ChessColour to_play
-    -Piece& getPiece(int id)
-    +Board(void)
-    +bool MakeMove(String from, String to)
+class Square {
+    -Piece* piece
+    +bool IsOccupied( void )
+    +Piece* GetPiece( void )
+    +bool RemovePiece( void )
+    +bool AddPiece( Piece& )
 }
+Square --> Piece : points to
+class Board {
+    -vector<Piece> white_pieces
+    -vector<Piece> black_pieces
+    -Square[8][8] squares
+    +vector<Move> GetMoves( ChessColour )
+    +bool PerformMove( Move )
+    +Board( void )
+}
+class Move {
+    Square& from
+    Square& to
+}
+Move --> Square : contains
+Board --> Move : uses
+Board --> Square : contains
+Board --> Piece : stores
 Board --> ChessColour : uses
+class GameState {
+    -Board board
+    -ChessColour turn_colour
+    -vector<Move> move_list
+    -String json_state
+    -int score
+    +void Play( Move )
+    +void PrintBoard( void )
+    +int GetScore( void )
+    +ChessColour GetColour( void )
+    +vector<Move> GetMoves( void )
+    +GameState( void )
+}
+GameState --> Board : uses
+GameState --> ChessColour : uses
+GameState --> Move : uses
 @enduml
