@@ -1,0 +1,29 @@
+@startuml
+enum ChessColour {
+    BLACK
+    WHITE
+}
+enum ChessPieceType {
+    KING
+    QUEEN
+    BISHOP
+    KNIGHT
+    PAWN
+}
+class Piece {
+    +ChessPieceType Type
+    +ChessColour Colour
+    +int Value
+    +int Id
+}
+Piece --> ChessPieceType : uses
+Piece --> ChessColour : uses
+class Board {
+    -2dMatrix<int> state
+    -ChessColour to_play
+    -Piece& getPiece(int id)
+    +Board(void)
+    +bool MakeMove(String from, String to)
+}
+Board --> ChessColour : uses
+@enduml
