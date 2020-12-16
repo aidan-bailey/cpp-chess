@@ -1,36 +1,37 @@
 @startuml
 enum ChessColour {
-    BLACK
-    WHITE
+    Black
+    White
 }
-enum SquareType {
-    K
-    Q
-    B
-    K
-    P
-    X
+enum PieceType {
+    King
+    Queen
+    Bishop
+    Knight
+    Rook
+    Pawn
 }
-class Square {
-    +SquareType Type
+class Piece {
+    +PieceType Type
     +ChessColour Colour
 }
-Square --> SquareType : uses
-Square --> ChessColour : uses
-class Board {
-    -Square[8][8] squares
-    -bool isLegalMove( Move )
-    +Board( void )
-    +bool PerformMove( Move )
-    +vector<Move> GetMoves( ChessColour )
-}
+Piece --> PieceType
+Piece --> ChessColour
 class Move {
     +pair<char,int> from
     +pair<char,int> to
 }
-Board --> Move : uses
-Board --> Square : contains
-Board --> ChessColour : uses
+class Board {
+    -vector<Piece> white_pieces
+    -vector<Piece> black_pieces
+    -map<Piece&, pair<char, int>> piece_map
+    +Board( void )
+    +bool PerformMove( Move )
+    +vector<Move> GetMoves( ChessColour )
+}
+Board --> Move
+Board --> ChessColour
+Board --> Piece
 class GameState {
     -Board board
     -ChessColour turn_colour
@@ -41,7 +42,7 @@ class GameState {
     +ChessColour GetColour( void )
     +vector<Move> GetMoveList ( void )
 }
-GameState --> Board : uses
-GameState --> ChessColour : uses
-GameState --> Move : uses
+GameState --> Board
+GameState --> ChessColour
+GameState --> Move
 @enduml

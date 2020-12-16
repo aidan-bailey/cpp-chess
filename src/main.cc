@@ -1,5 +1,9 @@
+#include "chess-board/Board.h"
 #include <iostream>
+#include <utility>
 
-using namespace std;
-
-int main(int argc, char *argv[]) { return 0; }
+int main(int argc, char *argv[]) {
+  chesspp::Board board;
+  std::cout << board.toString() << std::endl;
+  return 0;
+}
