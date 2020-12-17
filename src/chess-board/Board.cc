@@ -44,9 +44,10 @@ bool chesspp::Board::MakeMove(std::pair<char, int> from,
 
 std::string chesspp::Board::toString(void) {
   std::string result;
+  result = result + "---------------------------\n";
   for (int i = 7; i > -1; i--) {
-    result += '|';
-    for (char j = 0; j < 8; j++) {
+    result = result + ' ' + std::to_string(i + 1) + '|';
+    for (int j = 0; j < 8; j++) {
       if (state[j][i].IsOccuppied())
         result = result +
                  chesspp::ChessColourNames[state[j][i].GetPiece().Colour] +
@@ -58,5 +59,7 @@ std::string chesspp::Board::toString(void) {
     if (i != 0)
       result += '\n';
   }
+  result = result + "\n  | a| b| c| d| e| f| g| h|";
+  result = result + "\n---------------------------";
   return result;
 }

@@ -1,6 +1,7 @@
 #include "ChessColour.h"
 #include "Turn.h"
 #include "chess-board/Board.h"
+#include "linear_search.hpp"
 #include "services/GameService.h"
 #include "services/GameState.h"
 #include <iostream>
@@ -13,9 +14,7 @@ int main(int argc, char *argv[]) {
   while (true) {
     std::system("clear");
     std::cout << "ChessPlusPlus " << std::endl;
-    std::cout << "-------------------------" << std::endl;
     game_service.PrintBoard();
-    std::cout << "-------------------------" << std::endl;
     if (game_service.GetState() == chesspp::Ready) {
       auto piece_location = game_service.GetMoveablePieces();
 
@@ -23,38 +22,50 @@ int main(int argc, char *argv[]) {
           game_service.GetToPlay() == chesspp::White ? "White" : "Black";
       std::cout << colour << " to play." << std::endl;
       std::cout << "Available pieces: " << std::endl;
-      std::cout << "0.Concede|";
       for (int i = 0; i < piece_location.size(); i++) {
-        std::cout << i + 1 << '.' << piece_location[i].first
-                  << piece_location[i].second << '|';
+        std::cout << piece_location[i].first << piece_location[i].second << '|';
       }
-      std::cout << std::endl << "Select piece to move: ";
-      int selected_source;
-      std::cin >> selected_source;
-      if (selected_source == 0) {
+      std::cout << std::endl << "Select source square ('xx' to concede): ";
+      std::string selected_source;
+      std::getline(std::cin, selected_source);
+      if (selected_source == "")
+        continue;
+      if (selected_source.length() != 2)
+        continue;
+      if (selected_source == "xx") {
         game_service.Concede();
         continue;
       }
-
-      if ((selected_source < 1 || selected_source > piece_location.size()))
+      char src_col = selected_source[0];
+      int src_row = selected_source[1] - 48;
+      if (src_col < 'a' || src_col > 'h' || src_row < 1 || src_row > 8)
         continue;
-
-      std::pair<char, int> source = piece_location[selected_source - 1];
+      std::pair<char, int> source{src_col, src_row};
       auto possible_moves = game_service.GetPossibleMoves(source);
-      std::cout << 0 << ".Return|";
-      for (int i = 0; i < possible_moves.size(); i++) {
-        std::cout << i + 1 << '.' << possible_moves[i].first
-                  << possible_moves[i].second << '|';
-      }
-      std::cout << std::endl << "Select a square to move to: ";
-      int selected_target(-1);
-      while (selected_target < 0 || selected_target > possible_moves.size()) {
-        std::cin >> selected_target;
-      }
-      if (selected_target == 0)
+      if (possible_moves.size() == 0)
         continue;
-      std::pair<char, int> target = possible_moves[selected_target - 1];
 
+      for (int i = 0; i < possible_moves.size(); i++) {
+        std::cout << possible_moves[i].first << possible_moves[i].second << '|';
+      }
+      std::cout << std::endl << "Select target square (bb to go back): ";
+      std::string selected_target;
+      std::getline(std::cin, selected_target);
+      if (selected_target == "")
+        continue;
+      if (selected_target.length() != 2)
+        continue;
+      if (selected_target == "bb") {
+        continue;
+      }
+      char trg_col = selected_target[0];
+      int trg_row = selected_target[1] - 48;
+      if (trg_col < 'a' || trg_col > 'h' || trg_row < 1 || trg_row > 8)
+        continue;
+      std::pair<char, int> target{trg_col, trg_row};
+      if (search::linear_search(target, &possible_moves[0],
+                                possible_moves.size()) == -1)
+        continue;
       chesspp::Turn chosen_move{source, target};
       game_service.PlayTurn(chosen_move);
     } else {
@@ -63,15 +74,15 @@ int main(int argc, char *argv[]) {
       std::cout << "Game over!" << std::endl
                 << colour << " is victorious!" << std::endl;
 
-      int instruction(-1);
-      std::cout << "0. Exit|1. Reset" << std::endl;
-      while (instruction != 0) {
-        std::cin >> instruction;
-        switch (instruction) {
-        case 0:
-          return 0;
-          break;
-        }
+      char instruction;
+      std::cout << "(E)Exit" << std::endl;
+      std::cin >> instruction;
+      switch (instruction) {
+      case 'E':
+        break;
+      default:
+        return 0;
+        break;
       }
     }
   }
