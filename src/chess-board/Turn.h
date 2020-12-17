@@ -6,9 +6,11 @@
 
 namespace chesspp {
 struct Turn {
-  std::pair<char, int> const From;
-  std::pair<char, int> const To;
+  std::pair<char, int> From;
+  std::pair<char, int> To;
+  friend bool operator==(Turn&, Turn&);
 };
+bool operator==(chesspp::Turn&, chesspp::Turn&);
 } // namespace chesspp
 
 #endif // __MOVE_H_

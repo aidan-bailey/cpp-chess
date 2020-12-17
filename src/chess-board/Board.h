@@ -18,8 +18,8 @@ private:
 public:
   Board(void);
   ~Board(void);
-  const Square &At(char, int);
-  bool MakeMove(Turn);
+  Square &At(char, int);
+  bool MakeMove(std::pair<char, int>, std::pair<char, int>);
   std::string toString(void);
 };
 } // namespace chesspp

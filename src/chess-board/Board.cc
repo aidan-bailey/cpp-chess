@@ -2,6 +2,7 @@
 #include "ChessColour.h"
 #include "PieceType.h"
 #include <string>
+#include <utility>
 
 chesspp::Board::Board(void) {
   PieceType const minor_piece_types[8]{Rook, Knight, Bishop, Queen,
@@ -26,17 +27,18 @@ chesspp::Board::~Board(void) {
   }
 }
 
-const chesspp::Square &chesspp::Board::At(char col, int row) {
+chesspp::Square &chesspp::Board::At(char col, int row) {
   int j(int(col - 97)), i(row - 1);
   return state[j][i];
 }
 
-bool chesspp::Board::MakeMove(Turn turn) {
-  Square from = At(turn.From.first, turn.From.second);
-  if (!from.IsOccuppied())
+bool chesspp::Board::MakeMove(std::pair<char, int> from,
+                              std::pair<char, int> to) {
+  Square &from_sqr = At(from.first, from.second);
+  if (!from_sqr.IsOccuppied())
     return false;
-  Square to = At(turn.To.first, turn.To.second);
-  to = from;
+  Square &to_sqr = At(to.first, to.second);
+  to_sqr = from_sqr;
   return true;
 }
 
