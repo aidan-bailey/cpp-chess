@@ -12,6 +12,7 @@ private:
 
 public:
   Square(void);
+  ~Square(void);
   bool IsOccuppied(void);
   bool AddPiece(chesspp::PieceType, chesspp::ChessColour);
   bool RemovePiece(void);

@@ -19,8 +19,6 @@ int main(int argc, char *argv[]) {
         game_service.GetToPlay() == chesspp::White ? "White" : "Black";
     if (game_service.GetState() == chesspp::Playing) {
       auto piece_location = game_service.GetMoveablePieces();
-
-      std::cout << colour << " to play." << std::endl;
       std::cout << "Available pieces: " << std::endl;
       for (int i = 0; i < piece_location.size(); i++) {
         std::cout << piece_location[i].first << piece_location[i].second << '|';
@@ -70,20 +68,18 @@ int main(int argc, char *argv[]) {
       game_service.PlayTurn(chosen_move);
     } else {
 
-      std::cout << "Game over!" << std::endl
-                << chesspp::GameStateNames[game_service.GetState()] << '!'
-                << std::endl;
-
       char instruction;
-      std::cout << "(e)xit" << std::endl;
+      std::cout << "[e]xit [r]eset" << std::endl;
       std::cin >> instruction;
       switch (instruction) {
       case 'e':
-        break;
+        return 0;
+      case 'r':
+        game_service.ResetGame();
+        continue;
       default:
-        break;
+        continue;
       }
-      break;
     }
   }
   return 0;

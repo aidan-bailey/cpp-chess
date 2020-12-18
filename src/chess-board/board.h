@@ -18,6 +18,7 @@ private:
 public:
   Board(void);
   ~Board(void);
+  void Reset(void);
   Square &At(char, int);
   bool MakeMove(std::pair<char, int>, std::pair<char, int>);
   std::string toString(void);

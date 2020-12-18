@@ -30,6 +30,7 @@ public:
   std::vector<std::pair<char, int>> GetPossibleMoves(std::pair<char, int>);
   void Concede(void);
   bool PlayTurn(Turn);
+  void ResetGame(void);
 };
 } // namespace chesspp
 

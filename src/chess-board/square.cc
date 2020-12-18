@@ -22,6 +22,8 @@ const chesspp::Piece &chesspp::Square::GetPiece(void) { return *PiecePtr; }
 
 chesspp::Square::Square(void) : PiecePtr(nullptr) {}
 
+chesspp::Square::~Square(void) { RemovePiece(); }
+
 chesspp::Square &chesspp::Square::operator=(Square &r) {
   if (!r.IsOccuppied())
     return *this;

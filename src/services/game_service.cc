@@ -19,6 +19,15 @@ chesspp::ChessColour chesspp::GameService::GetToPlay(void) { return to_play; }
 
 void chesspp::GameService::PrintBoard(void) {
   std::cout << board.toString() << std::endl;
+  std::string colour = to_play == chesspp::White ? "White" : "Black";
+  switch (state) {
+  case Playing:
+    std::cout << colour << " to play." << std::endl;
+    break;
+  default:
+    std::cout << "Game over!" << std::endl
+              << chesspp::GameStateNames[state] << '!' << std::endl;
+  }
 }
 
 chesspp::GameState chesspp::GameService::GetState(void) const { return state; }
@@ -76,4 +85,11 @@ bool chesspp::GameService::PlayTurn(Turn turn) {
 
 void chesspp::GameService::flipColour(void) {
   to_play = to_play == Black ? White : Black;
+}
+
+void chesspp::GameService::ResetGame(void) {
+  board.Reset();
+  state = Playing;
+  turn_counter = 1;
+  possible_move_list = move_service.GetAvailableTurns();
 }
