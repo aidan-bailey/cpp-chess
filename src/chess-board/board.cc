@@ -4,8 +4,14 @@
 #include <string>
 #include <utility>
 
+/**
+ * Board constructor.
+ **/
 chesspp::Board::Board(void) { populateDefaultBoard(); }
 
+/**
+ * Board destructor.
+ **/
 chesspp::Board::~Board(void) {
   for (int j = 0; j < 8; j++) {
     for (int i = 0; i < 8; i++) {
@@ -14,31 +20,34 @@ chesspp::Board::~Board(void) {
   }
 }
 
-void chesspp::Board::populateDefaultBoard(void) {
-  PieceType const minor_piece_types[8]{Rook, Knight, Bishop, Queen,
-                                       King, Bishop, Knight, Rook};
-  for (int j = 0; j < 8; j++) {
-    // white minor
-    state[j][0].AddPiece(minor_piece_types[j], White);
-    // white pawn
-    state[j][1].AddPiece(Pawn, White);
-    // black pawn
-    state[j][6].AddPiece(Pawn, Black);
-    // black minor
-    state[j][7].AddPiece(minor_piece_types[j], Black);
-  }
-}
-
-void chesspp::Board::Reset(void) {
-  this->~Board();
-  populateDefaultBoard();
-}
-
+/**
+ * Takes in a column and row and returns (if it exists) the corresponding
+ * square.
+ *
+ * @param col Column of requested square.
+ * @param row Row of requested square.
+ * @return Reference to square.
+ **/
 chesspp::Square &chesspp::Board::At(char col, int row) {
   int j(int(col - 97)), i(row - 1);
   return state[j][i];
 }
 
+/**
+ * Resets the board to the default starting state.
+ * */
+void chesspp::Board::Reset(void) {
+  this->~Board();
+  populateDefaultBoard();
+}
+
+/**
+ * Attempts to make a legal chess move.
+ *
+ * @param from Source square location pair.
+ * @param to Target square location pair.
+ * @return Bool specifying whether the move was successful.
+ * */
 bool chesspp::Board::MakeMove(std::pair<char, int> from,
                               std::pair<char, int> to) {
   Square &from_sqr = At(from.first, from.second);
@@ -49,6 +58,9 @@ bool chesspp::Board::MakeMove(std::pair<char, int> from,
   return true;
 }
 
+/**
+ * Board toString.
+ * */
 std::string chesspp::Board::toString(void) {
   std::string result;
   result = result + "---------------------------\n";
@@ -69,4 +81,22 @@ std::string chesspp::Board::toString(void) {
   result = result + "\n  | a| b| c| d| e| f| g| h|";
   result = result + "\n---------------------------";
   return result;
+}
+
+/**
+ * Default board populator.
+ * */
+void chesspp::Board::populateDefaultBoard(void) {
+  PieceType const minor_piece_types[8]{Rook, Knight, Bishop, Queen,
+                                       King, Bishop, Knight, Rook};
+  for (int j = 0; j < 8; j++) {
+    // white minor
+    state[j][0].AddPiece(minor_piece_types[j], White);
+    // white pawn
+    state[j][1].AddPiece(Pawn, White);
+    // black pawn
+    state[j][6].AddPiece(Pawn, Black);
+    // black minor
+    state[j][7].AddPiece(minor_piece_types[j], Black);
+  }
 }
