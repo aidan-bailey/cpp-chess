@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
     std::system("clear");
     std::cout << "ChessPlusPlus " << std::endl;
     game_service.PrintBoard();
-    if (game_service.GetState() == chesspp::Ready) {
+    std::string colour =
+        game_service.GetToPlay() == chesspp::White ? "White" : "Black";
+    if (game_service.GetState() == chesspp::Playing) {
       auto piece_location = game_service.GetMoveablePieces();
 
-      std::string colour =
-          game_service.GetToPlay() == chesspp::White ? "White" : "Black";
       std::cout << colour << " to play." << std::endl;
       std::cout << "Available pieces: " << std::endl;
       for (int i = 0; i < piece_location.size(); i++) {
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
       for (int i = 0; i < possible_moves.size(); i++) {
         std::cout << possible_moves[i].first << possible_moves[i].second << '|';
       }
-      std::cout << std::endl << "Select target square (bb to go back): ";
+      std::cout << std::endl << "Select target square ('bb' to go back): ";
       std::string selected_target;
       std::getline(std::cin, selected_target);
       if (selected_target == "")
@@ -69,21 +69,21 @@ int main(int argc, char *argv[]) {
       chesspp::Turn chosen_move{source, target};
       game_service.PlayTurn(chosen_move);
     } else {
-      std::string colour =
-          game_service.GetToPlay() == chesspp::White ? "Black" : "White";
+
       std::cout << "Game over!" << std::endl
-                << colour << " is victorious!" << std::endl;
+                << chesspp::GameStateNames[game_service.GetState()] << '!'
+                << std::endl;
 
       char instruction;
-      std::cout << "(E)Exit" << std::endl;
+      std::cout << "(e)xit" << std::endl;
       std::cin >> instruction;
       switch (instruction) {
-      case 'E':
+      case 'e':
         break;
       default:
-        return 0;
         break;
       }
+      break;
     }
   }
   return 0;

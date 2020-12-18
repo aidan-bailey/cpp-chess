@@ -16,12 +16,17 @@ const std::vector<chesspp::Turn> chesspp::MoveService::GetAvailableTurns(void) {
       std::pair<char, int> source{col, row};
       switch (square.GetPiece().Type) {
       case King:
+        kings_walk(source, result);
         break;
       case Queen:
+        lanes(source, result);
+        diags(source, result);
         break;
       case Bishop:
+        diags(source, result);
         break;
       case Knight:
+        jump(source, result);
         break;
       case Rook:
         lanes(source, result);
@@ -146,16 +151,68 @@ void chesspp::MoveService::lanes(std::pair<char, int> &location,
 };
 
 void chesspp::MoveService::diags(std::pair<char, int> &location,
-                                 std::vector<chesspp::Turn> &current){
-    // TODO
+                                 std::vector<chesspp::Turn> &current) {
+  const char src_col = location.first;
+  const int src_row = location.second;
+  for (int y = -1; y < 2; y += 2)
+    for (int x = -1; x < 2; x += 2)
+      for (char j = src_col + x, i = src_row + y; isValid(j, i);
+           i += y, j += x) {
+        Square &square = board.At(j, i);
+        if (!square.IsOccuppied()) {
+          current.emplace_back(Turn{location, std::make_pair(j, i)});
+          continue;
+        }
+        if (square.GetPiece().Colour != to_play) {
+          current.emplace_back(Turn{location, std::make_pair(j, i)});
+        }
+        break;
+      }
 };
 
 void chesspp::MoveService::kings_walk(std::pair<char, int> &location,
-                                      std::vector<chesspp::Turn> &current){
-    // TODO
+                                      std::vector<chesspp::Turn> &current) {
+  const char src_col = location.first;
+  const int src_row = location.second;
+  // top
+  for (int i = src_row - 1; i < src_row + 1 + 1; i++)
+    for (char j = src_col - 1; j < src_col + 1 + 1; j++) {
+      if (!isValid(j, i) || std::make_pair(j, i) == location)
+        continue;
+      Square &square = board.At(j, i);
+      if (!square.IsOccuppied()) {
+        current.emplace_back(Turn{location, std::make_pair(j, i)});
+        continue;
+      }
+      if (square.GetPiece().Colour != to_play) {
+        current.emplace_back(Turn{location, std::make_pair(j, i)});
+      }
+    }
 };
 
 void chesspp::MoveService::jump(std::pair<char, int> &location,
-                                std::vector<chesspp::Turn> &current){
-    // TODO
-};
+                                std::vector<chesspp::Turn> &current) {
+  const char src_col = location.first;
+  const int src_row = location.second;
+  for (int x = 1; x > -2; x -= 2)
+    for (int y = 1; y > -2; y -= 2) {
+      // middle
+      char j = src_col + x * 2;
+      int i = src_row + y * 1;
+      if (isValid(j, i)) {
+        Square &square = board.At(j, i);
+        if (!square.IsOccuppied() || square.GetPiece().Colour != to_play) {
+          current.emplace_back(Turn{location, std::make_pair(j, i)});
+        }
+      }
+      // top
+      j = src_col + x * 1;
+      i = src_row + y * 2;
+      if (isValid(j, i)) {
+        Square &square = board.At(j, i);
+        if (!square.IsOccuppied() || square.GetPiece().Colour != to_play) {
+          current.emplace_back(Turn{location, std::make_pair(j, i)});
+        }
+      }
+    }
+}

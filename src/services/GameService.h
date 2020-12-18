@@ -18,6 +18,7 @@ private:
   MoveService move_service;
   std::vector<Turn> possible_move_list;
   GameState state;
+  void flipColour(void);
 
 public:
   GameService(void);

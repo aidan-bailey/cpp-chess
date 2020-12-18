@@ -11,9 +11,9 @@ chesspp::Board::Board(void) {
     // white minor
     state[j][0].AddPiece(minor_piece_types[j], White);
     // white pawn
-    state[j][1].AddPiece(Pawn, White);
+    //state[j][1].AddPiece(Pawn, White);
     // black pawn
-    state[j][6].AddPiece(Pawn, Black);
+    //state[j][6].AddPiece(Pawn, Black);
     // black minor
     state[j][7].AddPiece(minor_piece_types[j], Black);
   }
