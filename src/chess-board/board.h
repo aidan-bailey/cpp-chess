@@ -14,6 +14,7 @@ namespace chesspp {
 class Board {
 private:
   Square state[8][8];
+  void populateDefaultBoard(void);
 
 public:
   Board(void);

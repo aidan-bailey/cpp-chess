@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-chesspp::Board::Board(void) { Reset(); }
+chesspp::Board::Board(void) { populateDefaultBoard(); }
 
 chesspp::Board::~Board(void) {
   for (int j = 0; j < 8; j++) {
@@ -14,8 +14,7 @@ chesspp::Board::~Board(void) {
   }
 }
 
-void chesspp::Board::Reset(void) {
-  this->~Board();
+void chesspp::Board::populateDefaultBoard(void) {
   PieceType const minor_piece_types[8]{Rook, Knight, Bishop, Queen,
                                        King, Bishop, Knight, Rook};
   for (int j = 0; j < 8; j++) {
@@ -28,6 +27,11 @@ void chesspp::Board::Reset(void) {
     // black minor
     state[j][7].AddPiece(minor_piece_types[j], Black);
   }
+}
+
+void chesspp::Board::Reset(void) {
+  this->~Board();
+  populateDefaultBoard();
 }
 
 chesspp::Square &chesspp::Board::At(char col, int row) {
