@@ -1,4 +1,4 @@
-#include "Turn.h"
+#include "turn.h"
 
 bool chesspp::operator==(Turn &t1, Turn &t2) {
   if (t1.From != t2.From)

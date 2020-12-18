@@ -1,4 +1,4 @@
-#include "Square.h"
+#include "square.h"
 
 bool chesspp::Square::IsOccuppied(void) { return PiecePtr != nullptr; }
 

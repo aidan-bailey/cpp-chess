@@ -1,5 +1,5 @@
-#ifndef __PIECETYPE_H_
-#define __PIECETYPE_H_
+#ifndef __PIECE_TYPE_H_
+#define __PIECE_TYPE_H_
 
 namespace chesspp {
 

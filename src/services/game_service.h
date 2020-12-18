@@ -1,10 +1,10 @@
-#ifndef __GAMESERVICE_H_
-#define __GAMESERVICE_H_
+#ifndef __GAME_SERVICE_H_
+#define __GAME_SERVICE_H_
 
-#include "../chess-board/Board.h"
-#include "../chess-board/ChessColour.h"
-#include "GameState.h"
-#include "MoveService.h"
+#include "../chess-board/board.h"
+#include "../chess-board/chess_colour.h"
+#include "game_state.h"
+#include "move_service.h"
 #include <utility>
 #include <vector>
 

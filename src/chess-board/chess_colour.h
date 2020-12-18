@@ -1,5 +1,5 @@
-#ifndef __CHESSCOLOUR_H_
-#define __CHESSCOLOUR_H_
+#ifndef __CHESS_COLOUR_H_
+#define __CHESS_COLOUR_H_
 
 namespace chesspp {
 

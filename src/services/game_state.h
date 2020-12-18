@@ -1,5 +1,5 @@
-#ifndef __GAMESTATE_H_
-#define __GAMESTATE_H_
+#ifndef __GAME_STATE_H_
+#define __GAME_STATE_H_
 
 namespace chesspp {
 enum GameState { BlackVictory, WhiteVictory, Draw, Playing };

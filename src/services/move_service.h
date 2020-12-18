@@ -1,9 +1,9 @@
-#ifndef __MOVESERVICE_H_
-#define __MOVESERVICE_H_
+#ifndef __MOVE_SERVICE_H_
+#define __MOVE_SERVICE_H_
 
-#include "../chess-board/Board.h"
-#include "../chess-board/ChessColour.h"
-#include "../chess-board/Turn.h"
+#include "../chess-board/board.h"
+#include "../chess-board/chess_colour.h"
+#include "../chess-board/turn.h"
 #include <vector>
 
 namespace chesspp {

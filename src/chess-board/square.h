@@ -1,9 +1,9 @@
 #ifndef __SQUARE_H_
 #define __SQUARE_H_
 
-#include "ChessColour.h"
-#include "Piece.h"
-#include "PieceType.h"
+#include "chess_colour.h"
+#include "piece.h"
+#include "piece_type.h"
 
 namespace chesspp {
 class Square {

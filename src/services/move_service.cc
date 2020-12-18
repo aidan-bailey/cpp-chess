@@ -1,5 +1,5 @@
-#include "MoveService.h"
-#include "Square.h"
+#include "move_service.h"
+#include "square.h"
 #include <utility>
 
 chesspp::MoveService::MoveService(ChessColour &player, Board &brd)

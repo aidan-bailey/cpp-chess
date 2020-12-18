@@ -1,9 +1,9 @@
 #ifndef __BOARD_H_
 #define __BOARD_H_
 
-#include "Piece.h"
-#include "Square.h"
-#include "Turn.h"
+#include "piece.h"
+#include "square.h"
+#include "turn.h"
 #include <cstdint>
 #include <map>
 #include <string>

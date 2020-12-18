@@ -1,9 +1,9 @@
-#include "ChessColour.h"
-#include "Turn.h"
-#include "chess-board/Board.h"
+#include "chess-board/board.h"
+#include "chess_colour.h"
 #include "linear_search.hpp"
-#include "services/GameService.h"
-#include "services/GameState.h"
+#include "services/game_service.h"
+#include "services/game_state.h"
+#include "turn.h"
 #include <iostream>
 #include <ostream>
 #include <string>
