@@ -55,7 +55,7 @@ bool chesspp::Board::MakeMove(std::pair<char, int> from,
 /**
  * Board toString.
  * */
-std::string chesspp::Board::toString(void) {
+std::string chesspp::Board::toString(void) const {
   std::string result;
   result = result + "---------------------------\n";
   for (int i = 7; i > -1; i--) {
@@ -80,7 +80,7 @@ std::string chesspp::Board::toString(void) {
 /**
  * Copy operator.
  **/
-chesspp::Board &chesspp::Board::operator=(const Board &&b) {
+chesspp::Board &chesspp::Board::operator=(const Board &b) {
   cleanBoard();
   for (char col = 'a'; col < 'h' + 1; col++) {
     for (int row = 1; row < 8 + 1; row++) {

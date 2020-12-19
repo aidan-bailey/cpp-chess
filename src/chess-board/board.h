@@ -24,8 +24,8 @@ public:
   const Square &At(char, int) const;
   void Reset(void);
   bool MakeMove(std::pair<char, int>, std::pair<char, int>);
-  std::string toString(void);
-  Board &operator=(const Board &&);
+  std::string toString(void) const;
+  Board &operator=(const Board &);
 };
 } // namespace chesspp
 
