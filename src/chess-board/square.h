@@ -13,12 +13,13 @@ private:
 public:
   Square(void);
   ~Square(void);
-  const Piece &GetPiece(void);
-  const bool IsOccuppied(void);
+  const Piece &GetPiece(void) const;
+  const bool IsOccuppied(void) const;
   bool AddPiece(chesspp::PieceType, chesspp::ChessColour);
   bool RemovePiece(void);
 
-  Square &operator=(Square &);
+  Square &operator=(Square &&);
+  Square &operator=(const Square &);
 };
 } // namespace chesspp
 

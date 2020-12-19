@@ -15,14 +15,17 @@ class Board {
 private:
   Square state[8][8];
   void populateDefaultBoard(void);
+  void cleanBoard(void);
+  Square &at(char, int);
 
 public:
   Board(void);
   ~Board(void);
-  Square &At(char, int);
+  const Square &At(char, int) const;
   void Reset(void);
   bool MakeMove(std::pair<char, int>, std::pair<char, int>);
   std::string toString(void);
+  Board &operator=(const Board &&);
 };
 } // namespace chesspp
 

@@ -12,13 +12,7 @@ chesspp::Board::Board(void) { populateDefaultBoard(); }
 /**
  * Board destructor.
  **/
-chesspp::Board::~Board(void) {
-  for (int j = 0; j < 8; j++) {
-    for (int i = 0; i < 8; i++) {
-      state[j][i].RemovePiece();
-    }
-  }
-}
+chesspp::Board::~Board(void) { cleanBoard(); }
 
 /**
  * Takes in a column and row and returns (if it exists) the corresponding
@@ -28,7 +22,7 @@ chesspp::Board::~Board(void) {
  * @param row Row of requested square.
  * @return Reference to square.
  **/
-chesspp::Square &chesspp::Board::At(char col, int row) {
+const chesspp::Square &chesspp::Board::At(char col, int row) const {
   int j(int(col - 97)), i(row - 1);
   return state[j][i];
 }
@@ -50,11 +44,11 @@ void chesspp::Board::Reset(void) {
  * */
 bool chesspp::Board::MakeMove(std::pair<char, int> from,
                               std::pair<char, int> to) {
-  Square &from_sqr = At(from.first, from.second);
+  Square &from_sqr = at(from.first, from.second);
   if (!from_sqr.IsOccuppied())
     return false;
-  Square &to_sqr = At(to.first, to.second);
-  to_sqr = from_sqr;
+  Square &to_sqr = at(to.first, to.second);
+  to_sqr = std::move(from_sqr);
   return true;
 }
 
@@ -84,8 +78,24 @@ std::string chesspp::Board::toString(void) {
 }
 
 /**
+ * Copy operator.
+ **/
+chesspp::Board &chesspp::Board::operator=(const Board &&b) {
+  cleanBoard();
+  for (char col = 'a'; col < 'h' + 1; col++) {
+    for (int row = 1; row < 8 + 1; row++) {
+      const Square &square = b.At(col, row);
+      if (square.IsOccuppied()) {
+        state[col][row] = square;
+      }
+    }
+  }
+  return *this;
+}
+
+/**
  * Default board populator.
- * */
+ **/
 void chesspp::Board::populateDefaultBoard(void) {
   PieceType const minor_piece_types[8]{Rook, Knight, Bishop, Queen,
                                        King, Bishop, Knight, Rook};
@@ -99,4 +109,20 @@ void chesspp::Board::populateDefaultBoard(void) {
     // black minor
     state[j][7].AddPiece(minor_piece_types[j], Black);
   }
+}
+
+/**
+ * Cleans chess board.
+ **/
+void chesspp::Board::cleanBoard(void) {
+  for (int j = 0; j < 8; j++) {
+    for (int i = 0; i < 8; i++) {
+      state[j][i].RemovePiece();
+    }
+  }
+}
+
+chesspp::Square &chesspp::Board::at(char col, int row) {
+  int j(int(col - 97)), i(row - 1);
+  return state[j][i];
 }

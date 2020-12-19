@@ -15,14 +15,18 @@ chesspp::Square::~Square(void) { RemovePiece(); }
  *
  * @return Reference to piece.
  **/
-const chesspp::Piece &chesspp::Square::GetPiece(void) { return *PiecePtr; }
+const chesspp::Piece &chesspp::Square::GetPiece(void) const {
+  return *PiecePtr;
+}
 
 /**
  * Checks whether the square contains a piece.
  *
  * @return Bool whether or not the square is occupied.
  **/
-const bool chesspp::Square::IsOccuppied(void) { return PiecePtr != nullptr; }
+const bool chesspp::Square::IsOccuppied(void) const {
+  return PiecePtr != nullptr;
+}
 
 /**
  * Add a piece to the square.
@@ -55,12 +59,23 @@ bool chesspp::Square::RemovePiece(void) {
 /**
  * Move operator allowing you to perform a 'move' from one square to another.
  **/
-chesspp::Square &chesspp::Square::operator=(Square &r) {
-  if (!r.IsOccuppied())
+chesspp::Square &chesspp::Square::operator=(Square &&s) {
+  if (!s.IsOccuppied())
     return *this;
   RemovePiece();
-  Piece *temp = r.PiecePtr;
-  r.PiecePtr = nullptr;
+  Piece *temp = s.PiecePtr;
+  s.PiecePtr = nullptr;
   this->PiecePtr = temp;
+  return *this;
+}
+
+/**
+ * Copy operator.
+ **/
+chesspp::Square &chesspp::Square::operator=(const Square &s) {
+  if (!s.IsOccuppied())
+    return *this;
+  RemovePiece();
+  this->AddPiece(s.GetPiece().Type, s.GetPiece().Colour);
   return *this;
 }

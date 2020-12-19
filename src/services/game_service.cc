@@ -100,7 +100,7 @@ bool chesspp::GameService::PlayTurn(Turn turn) {
   possible_move_list = move_service.GetAvailableTurns();
   for (auto ptr = possible_move_list.begin(); ptr < possible_move_list.end();
        ptr++) {
-    Square &square = board.At(ptr->To.first, ptr->To.second);
+    const Square &square = board.At(ptr->To.first, ptr->To.second);
     if (square.IsOccuppied() && square.GetPiece().Type == King) {
       state = GameState(to_play);
       return false;

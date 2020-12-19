@@ -11,12 +11,13 @@ class MoveService {
 private:
   ChessColour &to_play;
   Board &board;
-  void step(std::pair<char, int> &, std::vector<chesspp::Turn> &);
-  void double_step(std::pair<char, int> &, std::vector<chesspp::Turn> &);
-  void lanes(std::pair<char, int> &, std::vector<chesspp::Turn> &);
-  void diags(std::pair<char, int> &, std::vector<chesspp::Turn> &);
-  void kings_walk(std::pair<char, int> &, std::vector<chesspp::Turn> &);
-  void jump(std::pair<char, int> &, std::vector<chesspp::Turn> &);
+  bool isValid(char, int) const;
+  void step(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
+  void double_step(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
+  void lanes(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
+  void diags(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
+  void kings_walk(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
+  void jump(std::pair<char, int> &, std::vector<chesspp::Turn> &) const;
 
 public:
   MoveService(ChessColour &, Board &);
