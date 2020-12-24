@@ -4,7 +4,8 @@
 #include "../chess-board/board.h"
 #include "../chess-board/chess_colour.h"
 #include "game_state.h"
-#include "move_service.h"
+#include "move_utility.h"
+#include "square_location.h"
 #include <utility>
 #include <vector>
 
@@ -12,7 +13,7 @@ namespace chesspp {
 class GameService {
 private:
   // move service
-  MoveService move_service;
+  MoveUtility move_util;
   // board object
   Board board;
   // current turn colour variable
@@ -38,10 +39,9 @@ public:
   // gets current possible turn list
   const std::vector<Turn> &GetPossibleTurns(void);
   // gets current moveable pieces
-  const std::vector<std::pair<char, int>> GetMoveablePieces(void);
+  const std::vector<SquareLocation> GetMoveablePieces(void);
   // gets possible moves for a specific piece
-  const std::vector<std::pair<char, int>>
-      GetPossibleMoves(std::pair<char, int>);
+  const std::vector<SquareLocation> GetPossibleMoves(SquareLocation);
   // attempt to play a turn
   bool PlayTurn(Turn);
   // concedes the game for the current player
@@ -53,4 +53,4 @@ public:
 };
 } // namespace chesspp
 
-#endif // __GAMESERVICE_H_
+#endif // __GAME_SERVICE_H_

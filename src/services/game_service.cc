@@ -3,8 +3,9 @@
 #include "chess_colour.h"
 #include "game_state.h"
 #include "linear_search.hpp"
-#include "move_service.h"
+#include "move_utility.h"
 #include "piece_type.h"
+#include "square_location.h"
 #include "turn.h"
 #include <algorithm>
 #include <iostream>
@@ -22,8 +23,10 @@ void chesspp::GameService::flipColour(void) {
  * Game service constructor.
  **/
 chesspp::GameService::GameService(void)
-    : to_play(chesspp::White), turn_counter(1), move_service(to_play, board),
-      possible_move_list(move_service.GetAvailableTurns()), state(Playing){};
+    : to_play(chesspp::White), turn_counter(1),
+      possible_move_list(
+          move_util.GetAvailableTurns(board, to_play, turn_list)),
+      state(Playing){};
 
 /**
  * Getter for current turn colour.
@@ -55,10 +58,14 @@ const std::vector<chesspp::Turn> &chesspp::GameService::GetPossibleTurns(void) {
  *
  * @return Vector of moveable pair locations.
  **/
-const std::vector<std::pair<char, int>>
+const std::vector<chesspp::SquareLocation>
 chesspp::GameService::GetMoveablePieces(void) {
-  std::vector<std::pair<char, int>> result{
-      {possible_move_list[0].From.first, possible_move_list[0].From.second}};
+  std::vector<SquareLocation> result;
+  if (possible_move_list.empty())
+    return result;
+  SquareLocation s{possible_move_list[0].From.col,
+                   possible_move_list[0].From.row};
+  result.emplace_back(s);
   for (auto source = possible_move_list.begin() + 1;
        source < possible_move_list.end(); source++) {
     if (result.back() == source->From)
@@ -74,9 +81,9 @@ chesspp::GameService::GetMoveablePieces(void) {
  * @param location Location of piece to process.
  * @return Vector of possible target locations for the piece.
  **/
-const std::vector<std::pair<char, int>>
-chesspp::GameService::GetPossibleMoves(std::pair<char, int> location) {
-  std::vector<std::pair<char, int>> result;
+const std::vector<chesspp::SquareLocation>
+chesspp::GameService::GetPossibleMoves(chesspp::SquareLocation location) {
+  std::vector<SquareLocation> result;
   for (auto iter = possible_move_list.begin(); iter < possible_move_list.end();
        iter++)
     if (iter->From == location)
@@ -97,10 +104,10 @@ bool chesspp::GameService::PlayTurn(Turn turn) {
   board.MakeMove(turn.From, turn.To);
   turn_list.emplace_back(turn);
   flipColour();
-  possible_move_list = move_service.GetAvailableTurns();
+  possible_move_list = move_util.GetAvailableTurns(board, to_play, turn_list);
   for (auto ptr = possible_move_list.begin(); ptr < possible_move_list.end();
        ptr++) {
-    const Square &square = board.At(ptr->To.first, ptr->To.second);
+    const Square &square = board.At({char(ptr->To.col), ptr->To.row});
     if (square.IsOccuppied() && square.GetPiece().Type == King) {
       state = GameState(to_play);
       return false;
@@ -125,7 +132,7 @@ void chesspp::GameService::Concede(void) {
 void chesspp::GameService::ResetGame(void) {
   board.Reset();
   to_play = White;
-  possible_move_list = move_service.GetAvailableTurns();
+  possible_move_list = move_util.GetAvailableTurns(board, to_play, turn_list);
   turn_counter = 1;
   state = Playing;
 }

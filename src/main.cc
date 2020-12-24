@@ -3,6 +3,7 @@
 #include "linear_search.hpp"
 #include "services/game_service.h"
 #include "services/game_state.h"
+#include "square_location.h"
 #include "turn.h"
 #include <iostream>
 #include <ostream>
@@ -13,17 +14,14 @@ int main(int argc, char *argv[]) {
   chesspp::GameService game_service;
   while (true) {
     std::string buffer;
-    std::system("clear");
-    std::cout << "ChessPlusPlus " << std::endl;
-    game_service.PrintBoard();
     std::string colour =
         game_service.GetToPlay() == chesspp::White ? "White" : "Black";
     if (game_service.GetState() == chesspp::Playing) {
       auto piece_location = game_service.GetMoveablePieces();
       buffer = "Available pieces: \n";
       for (int i = 0; i < piece_location.size(); i++) {
-        buffer = buffer + piece_location[i].first +
-                 std::to_string(piece_location[i].second) + '|';
+        buffer = buffer + piece_location[i].col +
+                 std::to_string(piece_location[i].row) + '|';
       }
       buffer = buffer + "\nSelect source square ('xx' to concede): ";
       std::system("clear");
@@ -44,15 +42,15 @@ int main(int argc, char *argv[]) {
       int src_row = selected_source[1] - 48;
       if (src_col < 'a' || src_col > 'h' || src_row < 1 || src_row > 8)
         continue;
-      std::pair<char, int> source{src_col, src_row};
+      chesspp::SquareLocation source{src_col, src_row};
       auto possible_moves = game_service.GetPossibleMoves(source);
       if (possible_moves.size() == 0)
         continue;
 
       buffer = buffer + src_col + std::to_string(src_row) + '\n';
       for (int i = 0; i < possible_moves.size(); i++) {
-        buffer = buffer + possible_moves[i].first +
-                 std::to_string(possible_moves[i].second) + '|';
+        buffer = buffer + possible_moves[i].col +
+                 std::to_string(possible_moves[i].row) + '|';
       }
       buffer = buffer + "\nSelect target square ('bb' to go back): ";
       while (true) {
@@ -73,7 +71,7 @@ int main(int argc, char *argv[]) {
         int trg_row = selected_target[1] - 48;
         if (trg_col < 'a' || trg_col > 'h' || trg_row < 1 || trg_row > 8)
           continue;
-        std::pair<char, int> target{trg_col, trg_row};
+        chesspp::SquareLocation target{trg_col, trg_row};
         if (search::linear_search(target, &possible_moves[0],
                                   possible_moves.size()) == -1)
           continue;

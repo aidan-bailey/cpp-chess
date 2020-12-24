@@ -3,6 +3,7 @@
 
 #include "piece.h"
 #include "square.h"
+#include "square_location.h"
 #include "turn.h"
 #include <cstdint>
 #include <map>
@@ -20,10 +21,11 @@ private:
 
 public:
   Board(void);
+  Board(const Board &);
   ~Board(void);
-  const Square &At(char, int) const;
+  const Square &At(SquareLocation) const;
   void Reset(void);
-  bool MakeMove(std::pair<char, int>, std::pair<char, int>);
+  Board &MakeMove(SquareLocation, SquareLocation);
   std::string toString(void) const;
   Board &operator=(const Board &);
 };

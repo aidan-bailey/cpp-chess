@@ -1,6 +1,7 @@
 #include "board.h"
 #include "chess_colour.h"
 #include "piece_type.h"
+#include "square_location.h"
 #include <string>
 #include <utility>
 
@@ -8,6 +9,19 @@
  * Board constructor.
  **/
 chesspp::Board::Board(void) { populateDefaultBoard(); }
+
+chesspp::Board::Board(const Board &b) {
+  cleanBoard();
+  for (char col = 'a'; col < 'h' + 1; col++) {
+    for (int row = 1; row < 8 + 1; row++) {
+      const Square &source = b.At(SquareLocation{col, row});
+      Square &target = at(col, row);
+      if (source.IsOccuppied()) {
+        target.AddPiece(source.GetPiece().Type, source.GetPiece().Colour);
+      }
+    }
+  }
+}
 
 /**
  * Board destructor.
@@ -22,8 +36,9 @@ chesspp::Board::~Board(void) { cleanBoard(); }
  * @param row Row of requested square.
  * @return Reference to square.
  **/
-const chesspp::Square &chesspp::Board::At(char col, int row) const {
-  int j(int(col - 97)), i(row - 1);
+const chesspp::Square &
+chesspp::Board::At(chesspp::SquareLocation location) const {
+  int j(int(location.col - 97)), i(location.row - 1);
   return state[j][i];
 }
 
@@ -42,14 +57,12 @@ void chesspp::Board::Reset(void) {
  * @param to Target square location pair.
  * @return Bool specifying whether the move was successful.
  * */
-bool chesspp::Board::MakeMove(std::pair<char, int> from,
-                              std::pair<char, int> to) {
-  Square &from_sqr = at(from.first, from.second);
-  if (!from_sqr.IsOccuppied())
-    return false;
-  Square &to_sqr = at(to.first, to.second);
+chesspp::Board &chesspp::Board::MakeMove(chesspp::SquareLocation from,
+                                         chesspp::SquareLocation to) {
+  Square &from_sqr = at(from.col, from.row);
+  Square &to_sqr = at(to.col, to.row);
   to_sqr = std::move(from_sqr);
-  return true;
+  return *this;
 }
 
 /**
@@ -84,7 +97,7 @@ chesspp::Board &chesspp::Board::operator=(const Board &b) {
   cleanBoard();
   for (char col = 'a'; col < 'h' + 1; col++) {
     for (int row = 1; row < 8 + 1; row++) {
-      const Square &square = b.At(col, row);
+      const Square &square = b.At(SquareLocation{col, row});
       if (square.IsOccuppied()) {
         state[col][row] = square;
       }

@@ -8,7 +8,8 @@
 namespace chesspp {
 class Square {
 private:
-  Piece *PiecePtr;
+  Piece *piecePtr;
+  bool occupied;
 
 public:
   Square(void);
@@ -16,7 +17,7 @@ public:
   const Piece &GetPiece(void) const;
   const bool IsOccuppied(void) const;
   bool AddPiece(chesspp::PieceType, chesspp::ChessColour);
-  bool RemovePiece(void);
+  void RemovePiece(void);
 
   Square &operator=(Square &&);
   Square &operator=(const Square &);
