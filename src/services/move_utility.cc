@@ -289,13 +289,14 @@ void chesspp::MoveUtility::removeIllegals(const Board &board,
   for (auto turn : currentTurns) {
     Board board_copy(board);
     board_copy.MakeMove(turn.From, turn.To);
-    auto next_turns = getAllAvailableTurns(board_copy, to_play == White ? Black : White, history);
+    auto next_turns = getAllAvailableTurns(
+        board_copy, to_play == White ? Black : White, history);
     for (auto next_turn : next_turns) {
       Board board_copy_copy(board_copy);
       board_copy_copy.MakeMove(next_turn.From, next_turn.To);
-        if (next_turn.To == king_location) {
-          illegalMoves.emplace_back(turn);
-          break;
+      if (next_turn.To == king_location) {
+        illegalMoves.emplace_back(turn);
+        break;
       }
     }
   }

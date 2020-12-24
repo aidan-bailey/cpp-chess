@@ -105,13 +105,9 @@ bool chesspp::GameService::PlayTurn(Turn turn) {
   turn_list.emplace_back(turn);
   flipColour();
   possible_move_list = move_util.GetAvailableTurns(board, to_play, turn_list);
-  for (auto ptr = possible_move_list.begin(); ptr < possible_move_list.end();
-       ptr++) {
-    const Square &square = board.At({char(ptr->To.col), ptr->To.row});
-    if (square.IsOccuppied() && square.GetPiece().Type == King) {
-      state = GameState(to_play);
-      return false;
-    }
+  if (possible_move_list.empty()) {
+    state = Stalemate;
+    return true;
   }
   turn_counter++;
   return true;
