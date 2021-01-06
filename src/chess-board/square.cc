@@ -1,9 +1,17 @@
 #include "square.h"
+#include "square_location.h"
 
 /**
  * Square constructor.
  **/
-chesspp::Square::Square(void) : piecePtr(nullptr), occupied(false) {}
+chesspp::Square::Square(void)
+    : piecePtr(nullptr), occupied(false), location(SquareLocation{'a', 1}) {}
+
+/**
+ * Square constructor.
+ **/
+chesspp::Square::Square(chesspp::SquareLocation location)
+    : piecePtr(nullptr), occupied(false), location(location) {}
 
 /**
  * Square destructor.
@@ -25,6 +33,13 @@ const chesspp::Piece &chesspp::Square::GetPiece(void) const {
  * @return Bool whether or not the square is occupied.
  **/
 const bool chesspp::Square::IsOccuppied(void) const { return occupied; }
+
+/**
+ * Acquires square location
+ **/
+chesspp::SquareLocation chesspp::Square::GetLocation(void) const {
+  return location;
+}
 
 /**
  * Add a piece to the square.
@@ -57,6 +72,8 @@ void chesspp::Square::RemovePiece(void) {
  **/
 chesspp::Square &chesspp::Square::operator=(Square &&s) {
   RemovePiece();
+  if (!s.occupied)
+    return *this;
   Piece *temp = s.piecePtr;
   s.piecePtr = nullptr;
   s.occupied = false;

@@ -1,6 +1,7 @@
 #include "board.h"
 #include "chess_colour.h"
 #include "piece_type.h"
+#include "square.h"
 #include "square_location.h"
 #include <string>
 #include <utility>
@@ -39,7 +40,7 @@ chesspp::Board::~Board(void) { cleanBoard(); }
 const chesspp::Square &
 chesspp::Board::At(chesspp::SquareLocation location) const {
   int j(int(location.col - 97)), i(location.row - 1);
-  return state[j][i];
+  return state.squares[j][i];
 }
 
 /**
@@ -74,10 +75,11 @@ std::string chesspp::Board::toString(void) const {
   for (int i = 7; i > -1; i--) {
     result = result + ' ' + std::to_string(i + 1) + '|';
     for (int j = 0; j < 8; j++) {
-      if (state[j][i].IsOccuppied())
-        result = result +
-                 chesspp::ChessColourNames[state[j][i].GetPiece().Colour] +
-                 chesspp::PieceTypeNames[state[j][i].GetPiece().Type] + '|';
+      if (state.squares[j][i].IsOccuppied())
+        result =
+            result +
+            chesspp::ChessColourNames[state.squares[j][i].GetPiece().Colour] +
+            chesspp::PieceTypeNames[state.squares[j][i].GetPiece().Type] + '|';
       else {
         result = result + "XX" + '|';
       }
@@ -99,7 +101,7 @@ chesspp::Board &chesspp::Board::operator=(const Board &b) {
     for (int row = 1; row < 8 + 1; row++) {
       const Square &square = b.At(SquareLocation{col, row});
       if (square.IsOccuppied()) {
-        state[col][row] = square;
+        state.squares[col][row] = square;
       }
     }
   }
@@ -114,13 +116,13 @@ void chesspp::Board::populateDefaultBoard(void) {
                                        King, Bishop, Knight, Rook};
   for (int j = 0; j < 8; j++) {
     // white minor
-    state[j][0].AddPiece(minor_piece_types[j], White);
+    state.squares[j][0].AddPiece(minor_piece_types[j], White);
     // white pawn
-    state[j][1].AddPiece(Pawn, White);
+    state.squares[j][1].AddPiece(Pawn, White);
     // black pawn
-    state[j][6].AddPiece(Pawn, Black);
+    state.squares[j][6].AddPiece(Pawn, Black);
     // black minor
-    state[j][7].AddPiece(minor_piece_types[j], Black);
+    state.squares[j][7].AddPiece(minor_piece_types[j], Black);
   }
 }
 
@@ -130,12 +132,12 @@ void chesspp::Board::populateDefaultBoard(void) {
 void chesspp::Board::cleanBoard(void) {
   for (int j = 0; j < 8; j++) {
     for (int i = 0; i < 8; i++) {
-      state[j][i].RemovePiece();
+      state.squares[j][i].RemovePiece();
     }
   }
 }
 
 chesspp::Square &chesspp::Board::at(char col, int row) {
   int j(int(col - 97)), i(row - 1);
-  return state[j][i];
+  return state.squares[j][i];
 }

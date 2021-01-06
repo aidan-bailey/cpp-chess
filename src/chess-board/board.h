@@ -1,6 +1,7 @@
 #ifndef __BOARD_H_
 #define __BOARD_H_
 
+#include "board_state.h"
 #include "piece.h"
 #include "square.h"
 #include "square_location.h"
@@ -14,7 +15,7 @@
 namespace chesspp {
 class Board {
 private:
-  Square state[8][8];
+  BoardState state;
   void populateDefaultBoard(void);
   void cleanBoard(void);
   Square &at(char, int);
