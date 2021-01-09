@@ -39,7 +39,7 @@ chesspp::Board::~Board(void) { cleanBoard(); }
  **/
 const chesspp::Square &
 chesspp::Board::At(chesspp::SquareLocation location) const {
-  int j(int(location.col - 97)), i(location.row - 1);
+  int j(int(location.Col - 97)), i(location.Row - 1);
   return state.squares[j][i];
 }
 
@@ -60,8 +60,8 @@ void chesspp::Board::Reset(void) {
  * */
 chesspp::Board &chesspp::Board::MakeMove(chesspp::SquareLocation from,
                                          chesspp::SquareLocation to) {
-  Square &from_sqr = at(from.col, from.row);
-  Square &to_sqr = at(to.col, to.row);
+  Square &from_sqr = at(from.Col, from.Row);
+  Square &to_sqr = at(to.Col, to.Row);
   to_sqr = std::move(from_sqr);
   return *this;
 }

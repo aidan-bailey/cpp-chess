@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
       auto piece_location = game_service.GetMoveablePieces();
       buffer = "Available pieces: \n";
       for (int i = 0; i < piece_location.size(); i++) {
-        buffer = buffer + piece_location[i].col +
-                 std::to_string(piece_location[i].row) + '|';
+        buffer = buffer + piece_location[i].Col +
+                 std::to_string(piece_location[i].Row) + '|';
       }
       buffer = buffer + "\nSelect source square ('xx' to concede): ";
       std::system("clear");
@@ -49,8 +49,8 @@ int main(int argc, char *argv[]) {
 
       buffer = buffer + src_col + std::to_string(src_row) + '\n';
       for (int i = 0; i < possible_moves.size(); i++) {
-        buffer = buffer + possible_moves[i].col +
-                 std::to_string(possible_moves[i].row) + '|';
+        buffer = buffer + possible_moves[i].Col +
+                 std::to_string(possible_moves[i].Row) + '|';
       }
       buffer = buffer + "\nSelect target square ('bb' to go back): ";
       while (true) {

@@ -10,7 +10,7 @@ struct Piece {
   PieceType const Type;
   ChessColour const Colour;
   Piece(PieceType type, ChessColour colour);
-  Piece &operator=(const Piece &&);
+  Piece &operator=(const Piece &);
 };
 } // namespace chesspp
 

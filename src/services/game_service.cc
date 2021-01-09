@@ -63,8 +63,8 @@ chesspp::GameService::GetMoveablePieces(void) {
   std::vector<SquareLocation> result;
   if (possible_move_list.empty())
     return result;
-  SquareLocation s{possible_move_list[0].From.col,
-                   possible_move_list[0].From.row};
+  SquareLocation s{possible_move_list[0].From.Col,
+                   possible_move_list[0].From.Row};
   result.emplace_back(s);
   for (auto source = possible_move_list.begin() + 1;
        source < possible_move_list.end(); source++) {

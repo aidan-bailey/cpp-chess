@@ -10,7 +10,7 @@
 #include <vector>
 
 std::vector<chesspp::Turn>
-chesspp::MoveUtility::GetAvailableTurns(const Board &board, ChessColour to_play,
+chesspp::MoveUtility::GetAvailableTurns(const Board board, ChessColour to_play,
                                         const std::vector<Turn> turn_history) {
   std::vector<Turn> result(getAllAvailableTurns(board, to_play, turn_history));
   removeIllegals(board, to_play, result, turn_history);
@@ -30,31 +30,31 @@ std::vector<chesspp::Turn> chesspp::MoveUtility::getAllAvailableTurns(
       std::vector<Turn> moves;
       switch (square.GetPiece().Type) {
       case King:
-        moves = kings_walk(board, to_play, source);
+        moves = kings_walk(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       case Queen:
-        moves = lanes(board, to_play, source);
+        moves = lanes(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
-        moves = diags(board, to_play, source);
+        moves = diags(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       case Bishop:
-        moves = diags(board, to_play, source);
+        moves = diags(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       case Knight:
-        moves = jump(board, to_play, source);
+        moves = jump(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       case Rook:
-        moves = lanes(board, to_play, source);
+        moves = lanes(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       case Pawn:
-        moves = step(board, to_play, source);
+        moves = step(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
-        moves = double_step(board, to_play, source);
+        moves = double_step(board, square);
         result.insert(result.end(), moves.begin(), moves.end());
         break;
       }
@@ -68,12 +68,12 @@ bool chesspp::MoveUtility::isValid(char col, int row) {
 }
 
 std::vector<chesspp::Turn> chesspp::MoveUtility::step(const Board &board,
-                                                      ChessColour to_play,
-                                                      SquareLocation location) {
+                                                      const Square &source) {
   std::vector<Turn> result;
-  int direction = to_play == White ? 1 : -1;
-  char src_col = location.col;
-  int trg_row = location.row + direction;
+  int direction = source.GetPiece().Colour == White ? 1 : -1;
+  SquareLocation location = source.GetLocation();
+  char src_col = location.Col;
+  int trg_row = location.Row + direction;
   // middle
   if (!isValid(src_col, trg_row))
     return result;
@@ -82,9 +82,10 @@ std::vector<chesspp::Turn> chesspp::MoveUtility::step(const Board &board,
   // left + right
   for (int i = -1; i < 3; i += 2) {
     if (isValid(src_col + i, trg_row)) {
-      const Square &square =
+      const Square &target =
           board.At(SquareLocation{char(src_col + i), trg_row});
-      if (square.IsOccuppied() && square.GetPiece().Colour != to_play)
+      if (target.IsOccuppied() &&
+          target.GetPiece().Colour != source.GetPiece().Colour)
         result.emplace_back(
             Turn{location, SquareLocation{char(src_col + i), trg_row}});
     }
@@ -93,22 +94,22 @@ std::vector<chesspp::Turn> chesspp::MoveUtility::step(const Board &board,
 };
 
 std::vector<chesspp::Turn>
-chesspp::MoveUtility::double_step(const Board &board, ChessColour to_play,
-                                  SquareLocation location) {
+chesspp::MoveUtility::double_step(const Board &board, const Square &source) {
   std::vector<Turn> result;
-  switch (to_play) {
+  SquareLocation location = source.GetLocation();
+  switch (source.GetPiece().Colour) {
   case White:
-    if (location.row != 2)
+    if (location.Row != 2)
       return result;
     break;
   case Black:
-    if (location.row != 7)
+    if (location.Row != 7)
       return result;
     break;
   }
-  int direction = to_play == White ? 2 : -2;
-  char src_col = location.col;
-  int trg_row = location.row + direction;
+  int direction = source.GetPiece().Colour == White ? 2 : -2;
+  char src_col = location.Col;
+  int trg_row = location.Row + direction;
   // middle
   if (!isValid(src_col, trg_row))
     return result;
@@ -117,12 +118,13 @@ chesspp::MoveUtility::double_step(const Board &board, ChessColour to_play,
   return result;
 };
 
-std::vector<chesspp::Turn>
-chesspp::MoveUtility::lanes(const Board &board, ChessColour to_play,
-                            SquareLocation location) {
+std::vector<chesspp::Turn> chesspp::MoveUtility::lanes(const Board &board,
+                                                       const Square &source) {
   std::vector<Turn> result;
-  char src_col = location.col;
-  int src_row = location.row;
+  ChessColour to_play = source.GetPiece().Colour;
+  SquareLocation location = source.GetLocation();
+  char src_col = location.Col;
+  int src_row = location.Row;
   // up
   for (int trg_row = src_row + 1; trg_row < 9; trg_row++) {
     if (!isValid(src_col, trg_row))
@@ -186,12 +188,13 @@ chesspp::MoveUtility::lanes(const Board &board, ChessColour to_play,
   return result;
 };
 
-std::vector<chesspp::Turn>
-chesspp::MoveUtility::diags(const Board &board, ChessColour to_play,
-                            SquareLocation location) {
+std::vector<chesspp::Turn> chesspp::MoveUtility::diags(const Board &board,
+                                                       const Square &source) {
   std::vector<Turn> result;
-  const char src_col = location.col;
-  const int src_row = location.row;
+  SquareLocation location = source.GetLocation();
+  ChessColour to_play = source.GetPiece().Colour;
+  const char src_col = location.Col;
+  const int src_row = location.Row;
   for (int y = -1; y < 2; y += 2)
     for (int x = -1; x < 2; x += 2)
       for (char j = src_col + x, i = src_row + y; isValid(j, i);
@@ -210,11 +213,12 @@ chesspp::MoveUtility::diags(const Board &board, ChessColour to_play,
 };
 
 std::vector<chesspp::Turn>
-chesspp::MoveUtility::kings_walk(const Board &board, ChessColour to_play,
-                                 SquareLocation location) {
+chesspp::MoveUtility::kings_walk(const Board &board, const Square &source) {
   std::vector<Turn> result;
-  const char src_col = location.col;
-  const int src_row = location.row;
+  SquareLocation location = source.GetLocation();
+  ChessColour to_play = source.GetPiece().Colour;
+  const char src_col = location.Col;
+  const int src_row = location.Row;
   // top
   for (int i = src_row - 1; i < src_row + 1 + 1; i++)
     for (char j = src_col - 1; j < src_col + 1 + 1; j++) {
@@ -233,11 +237,12 @@ chesspp::MoveUtility::kings_walk(const Board &board, ChessColour to_play,
 };
 
 std::vector<chesspp::Turn> chesspp::MoveUtility::jump(const Board &board,
-                                                      ChessColour to_play,
-                                                      SquareLocation location) {
+                                                      const Square &source) {
   std::vector<Turn> result;
-  const char src_col = location.col;
-  const int src_row = location.row;
+  SquareLocation location = source.GetLocation();
+  ChessColour to_play = source.GetPiece().Colour;
+  const char src_col = location.Col;
+  const int src_row = location.Row;
   for (int x = 1; x > -2; x -= 2)
     for (int y = 1; y > -2; y -= 2) {
       // middle

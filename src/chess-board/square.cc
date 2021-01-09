@@ -5,13 +5,13 @@
  * Square constructor.
  **/
 chesspp::Square::Square(void)
-    : piecePtr(nullptr), occupied(false), location(SquareLocation{'a', 1}) {}
+    : piecePtr(nullptr), occupied(false), location(SquareLocation('a', 1)) {}
 
 /**
  * Square constructor.
  **/
-chesspp::Square::Square(chesspp::SquareLocation location)
-    : piecePtr(nullptr), occupied(false), location(location) {}
+chesspp::Square::Square(chesspp::SquareLocation l)
+    : piecePtr(nullptr), occupied(false), location(l) {}
 
 /**
  * Square destructor.
@@ -68,17 +68,24 @@ void chesspp::Square::RemovePiece(void) {
 };
 
 /**
- * Move operator allowing you to perform a 'move' from one square to another.
+ * Move operator.
  **/
 chesspp::Square &chesspp::Square::operator=(Square &&s) {
-  RemovePiece();
-  if (!s.occupied)
+  // check if source square is occupied
+  if (!s.IsOccuppied())
     return *this;
-  Piece *temp = s.piecePtr;
+
+  // check if target square is occupied
+  if (IsOccuppied())
+    RemovePiece();
+
+  // move piece
+  Piece *temp = &*s.piecePtr;
   s.piecePtr = nullptr;
   s.occupied = false;
   this->piecePtr = temp;
   this->occupied = true;
+
   return *this;
 }
 
@@ -86,6 +93,7 @@ chesspp::Square &chesspp::Square::operator=(Square &&s) {
  * Copy operator.
  **/
 chesspp::Square &chesspp::Square::operator=(const Square &s) {
+  this->location = s.location;
   if (!s.IsOccuppied()) {
     RemovePiece();
     return *this;

@@ -5,31 +5,26 @@
 #include "../chess-board/chess_colour.h"
 #include "../chess-board/square_location.h"
 #include "../chess-board/turn.h"
+#include "square.h"
 #include <vector>
 
 namespace chesspp {
 class MoveUtility {
 private:
   static bool isValid(char, int);
-  static std::vector<chesspp::Turn> step(const Board &, ChessColour,
-                                         SquareLocation);
-  static std::vector<chesspp::Turn> double_step(const Board &, ChessColour,
-                                                SquareLocation);
-  static std::vector<chesspp::Turn> lanes(const Board &, ChessColour,
-                                          SquareLocation);
-  static std::vector<chesspp::Turn> diags(const Board &, ChessColour,
-                                          SquareLocation);
-  static std::vector<chesspp::Turn> kings_walk(const Board &, ChessColour,
-                                               SquareLocation);
-  static std::vector<chesspp::Turn> jump(const Board &, ChessColour,
-                                         SquareLocation);
+  static std::vector<chesspp::Turn> step(const Board &, const Square &);
+  static std::vector<chesspp::Turn> double_step(const Board &, const Square &);
+  static std::vector<chesspp::Turn> lanes(const Board &, const Square &);
+  static std::vector<chesspp::Turn> diags(const Board &, const Square &);
+  static std::vector<chesspp::Turn> kings_walk(const Board &, const Square &);
+  static std::vector<chesspp::Turn> jump(const Board &, const Square &);
   static std::vector<Turn> getAllAvailableTurns(const Board &, ChessColour,
                                                 const std::vector<Turn> &);
   static void removeIllegals(const Board &, ChessColour, std::vector<Turn> &,
                              std::vector<Turn>);
 
 public:
-  static std::vector<Turn> GetAvailableTurns(const Board &, ChessColour,
+  static std::vector<Turn> GetAvailableTurns(const Board, ChessColour,
                                              const std::vector<Turn>);
 };
 } // namespace chesspp

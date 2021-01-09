@@ -3,9 +3,11 @@
 
 namespace chesspp {
 struct SquareLocation {
-  char col;
-  int row;
+  char Col;
+  int Row;
+  SquareLocation(char col, int row);
   friend bool operator==(SquareLocation &, SquareLocation &);
+  SquareLocation(const SquareLocation &);
 };
 bool operator==(SquareLocation &, SquareLocation &);
 } // namespace chesspp

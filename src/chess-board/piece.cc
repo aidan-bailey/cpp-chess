@@ -6,6 +6,6 @@ chesspp::Piece::Piece(PieceType type, ChessColour colour)
 /**
  * Copy constructor
  * */
-chesspp::Piece &chesspp::Piece::operator=(const chesspp::Piece &&p) {
+chesspp::Piece &chesspp::Piece::operator=(const chesspp::Piece &p) {
   return *new Piece(p.Type, p.Colour);
 }
